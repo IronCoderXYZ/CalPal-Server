@@ -2,8 +2,8 @@ const expect = require('expect');
 const supertest = require('supertest');
 const { ObjectID } = require('mongodb');
 
+const User = require('../user');
 const app = require('../../server');
-const User = require('../../models/user');
 const { initialUsers, populateUsers } = require('./seed');
 
 beforeEach(populateUsers);

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 // Local Imports
 require('./config');
 const User = require('./models/user');
-const Food = require('./models/Food');
+const Food = require('./models/food');
 const mongoose = require('./db/mongoose');
 const authenticateUser = require('./middleware/authenticate');
 // Consts
@@ -58,9 +58,9 @@ app
 
   /* Food */
   // Get Foods
-  .get('/foods', ({ headers }, res) => {
-    if (!headers.author) return res.status(404).send('Invalid author');
-    Food.findByAuthor(headers.author)
+  .get('/foods/:author', (req, res) => {
+    if (!req.params.author) return res.status(404).send('Invalid author');
+    Food.findByAuthor(req.params.author)
       .then(foods => res.send(foods))
       .catch(error => res.status(400).send('Error, please try again later.'));
   })

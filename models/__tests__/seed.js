@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { ObjectID } = require('mongodb');
 
-const User = require('../../models/user');
+const Food = require('../food');
+const User = require('../user');
 
 const userOneId = new ObjectID();
 const userTwoId = new ObjectID();
@@ -23,6 +24,29 @@ const initialUsers = [
     email: 'user2@email.com'
   }
 ];
+const author = new ObjectID();
+const initialFoods = [
+  {
+    calories: 500,
+    name: 'Chicken',
+    _id: new ObjectID(),
+    author: author
+  },
+  {
+    calories: 200,
+    name: 'Beef',
+    _id: new ObjectID(),
+    author: author
+  }
+];
+
+const populateFoods = done => {
+  Food.remove({})
+    .then(() => {
+      return Food.insertMany(initialFoods);
+    })
+    .then(() => done());
+};
 
 const populateUsers = done => {
   User.remove({})
@@ -34,4 +58,4 @@ const populateUsers = done => {
     .then(() => done());
 };
 
-module.exports = { initialUsers, populateUsers };
+module.exports = { initialFoods, populateFoods, initialUsers, populateUsers };
