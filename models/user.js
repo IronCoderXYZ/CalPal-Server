@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema({
   ]
 });
 
-UserSchema.pre('Save', function(next) {
+UserSchema.pre('save', function(next) {
   const user = this;
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (error, salt) => {
@@ -49,6 +49,12 @@ UserSchema.pre('Save', function(next) {
   }
 });
 
+UserSchema.methods.toJSON = function() {
+  const user = this;
+  const userObject = user.toObject();
+  return _.pick(userObject, ['_id', 'email']);
+};
+
 UserSchema.statics.findByCredentials = function(email, password) {
   const User = this;
 
@@ -57,9 +63,10 @@ UserSchema.statics.findByCredentials = function(email, password) {
       return Promise.reject('User not found');
     }
     return new Promise((resolve, reject) => {
-      bcrypt.compare(password, user.password, (error, isMatch) => {
-        if (isMatch) resolve(user);
-        reject('Login info incorrect, please try again.');
+      bcrypt.compare(password, user.password, (error, doesMatch) => {
+        if (doesMatch) resolve(user);
+        console.log(doesMatch);
+        reject('Incorrect credentials, please try again');
       });
     });
   });

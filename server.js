@@ -16,6 +16,17 @@ app
   .get('/', (req, res) => {
     return res.send('hello');
   })
+  // Login User
+  .post('/users/login', (req, res) => {
+    const params = _.pick(req.body, ['email', 'password']);
+    User.findByCredentials(params.email, params.password)
+      .then(user => {
+        return user.generateAuthToken().then(token => {
+          res.header('x-auth', token).send(user);
+        });
+      })
+      .catch(error => res.status(400).send(error));
+  })
   // Create User
   .post('/users', (req, res) => {
     const user = new User(_.pick(req.body, ['email', 'password']));
@@ -23,7 +34,7 @@ app
       .save()
       .then(() => user.generateAuthToken())
       .then(token => res.header('x-auth', token).send(user))
-      .catch(error => res.status(400).send('Error, please try again'));
+      .catch(error => res.status(400).send(error));
   })
   .listen(port, () => console.log(`Server up on port: ${port}`));
 
