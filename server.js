@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 require('./config');
 const User = require('./models/user');
 const mongoose = require('./db/mongoose');
+const authenticateUser = require('./middleware/authenticate');
 // Consts
 const app = express();
 const port = process.env.PORT;
@@ -15,6 +16,10 @@ app
   // Root
   .get('/', (req, res) => {
     return res.send('hello');
+  })
+  // Get Logged In User
+  .get('/users/me', authenticateUser, (req, res) => {
+    res.send(req.user);
   })
   // Login User
   .post('/users/login', (req, res) => {
