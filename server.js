@@ -1,8 +1,10 @@
 // NPM Imports
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 // Local Imports
 require('./config');
+const User = require('./models/user');
 const mongoose = require('./db/mongoose');
 // Consts
 const app = express();
