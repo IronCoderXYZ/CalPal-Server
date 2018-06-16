@@ -17,6 +17,13 @@ app
   .get('/', (req, res) => {
     return res.send('hello');
   })
+  // Logout User
+  .delete('/users/me/token', authenticateUser, (req, res) => {
+    req.user
+      .removeToken(req.token)
+      .then(() => res.status(200).send())
+      .catch(error => res.status(400).send());
+  })
   // Get Logged In User
   .get('/users/me', authenticateUser, (req, res) => {
     res.send(req.user);
