@@ -20,3 +20,54 @@ describe('GET /foods', () => {
       .end(done);
   });
 });
+
+describe('POST /foods', () => {
+  it('Should add a new food with valid data', done => {
+    const name = 'Testfood';
+    const calories = 99999999;
+    const author = initialFoods[0].author;
+
+    supertest(app)
+      .post('/foods')
+      .send({ name, calories, author })
+      .expect(200)
+      .expect(response => {
+        expect(response.body.name).toBe(name);
+        expect(response.body.calories).toBe(calories);
+        expect(response.body.author).toBe(author.toHexString());
+      })
+      .end((error, response) => {
+        if (error) return done(error);
+        Food.find({ name })
+          .then(foods => {
+            expect(foods.length).toBe(1);
+            expect(foods[0].name).toBe(name);
+            expect(foods[0].calories).toBe(calories);
+            expect(foods[0].author).toBe(author.toHexString());
+            done();
+          })
+          .catch(error => done(error));
+      });
+  });
+
+  it('Should not add a new food with invalid data', done => {
+    supertest(app)
+      .post('/foods')
+      .send({})
+      .expect(400)
+      .end((error, response) => {
+        if (error) return done(error);
+        Food.find()
+          .then(foods => {
+            // Expect length of 2 since initialFoods from seed has 2 items
+            expect(foods.length).toBe(2);
+            done();
+          })
+          .catch(error => done(error));
+      });
+  });
+});
+
+// describe('PATCH /foods/:id', () => {
+//   it
+// })
