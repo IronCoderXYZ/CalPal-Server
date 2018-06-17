@@ -68,6 +68,43 @@ describe('POST /foods', () => {
   });
 });
 
-// describe('PATCH /foods/:id', () => {
-//   it
-// })
+describe('PATCH /foods/:id', () => {
+  it('Should update a food', done => {
+    const newCalories = 250;
+    const newName = 'Chicken Update';
+    const hexId = initialFoods[0]._id.toHexString();
+
+    supertest(app)
+      .patch(`/foods/${hexId}`)
+      .send({ name: newName, calories: newCalories })
+      .expect(200)
+      .expect(res => {
+        expect(res.body.food.name).toBe(newName);
+        expect(res.body.food.calories).toBe(newCalories);
+      })
+      .end(done);
+  });
+});
+
+describe('DELETE /foods/:id', () => {
+  it('Should remove a food', done => {
+    const hexId = initialFoods[1]._id.toHexString();
+
+    supertest(app)
+      .delete(`/foods/${hexId}`)
+      .expect(200)
+      .expect(res => {
+        expect(res.body.food._id).toBe(hexId);
+      })
+      .end((error, response) => {
+        if (error) return done(error);
+        Food.findById(hexId)
+          .then(food => {
+            console.log(food);
+            expect(food).toBeFalsy();
+            done();
+          })
+          .catch(error => done(error));
+      });
+  });
+});
