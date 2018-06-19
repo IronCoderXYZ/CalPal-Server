@@ -55,7 +55,7 @@ app
     User.findByCredentials(params.email, params.password)
       .then(user => {
         return user.generateAuthToken().then(token => {
-          res.header('x-auth', token).send(user);
+          res.header('x-auth', token).send({ user, token });
         });
       })
       .catch(error => res.status(400).send(error));
@@ -66,7 +66,7 @@ app
     user
       .save()
       .then(() => user.generateAuthToken())
-      .then(token => res.header('x-auth', token).send(user))
+      .then(token => res.header('x-auth', token).send({ user, token }))
       .catch(error => res.status(400).send(error));
   })
 
