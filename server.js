@@ -24,6 +24,20 @@ app
   })
 
   /* USER */
+  // Update Consumed Calories
+  .post('/users/me/consumed', authenticateUser, (req, res) => {
+    const params = _.pick(req.body, ['_id', 'calories']);
+    User.findByIdAndUpdate(
+      params._id,
+      { $set: { consumedCalories: params.calories } },
+      { new: true }
+    )
+      .then(consumed => {
+        if (!consumed) return res.status(404).send();
+        res.send({ consumed });
+      })
+      .catch(error => res.status(400).send(error));
+  })
   // Logout User
   .delete('/users/me/token', authenticateUser, (req, res) => {
     req.user

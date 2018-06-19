@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 
 const UserSchema = new mongoose.Schema({
+  consumedCalories: Number,
   email: {
     trim: true,
     minlength: 3,

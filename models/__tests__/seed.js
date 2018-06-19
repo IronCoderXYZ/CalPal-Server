@@ -9,6 +9,7 @@ const userTwoId = new ObjectID();
 const initialUsers = [
   {
     _id: userOneId,
+    consumedCalories: 0,
     password: 'password',
     email: 'user@email.com',
     tokens: [
@@ -20,6 +21,7 @@ const initialUsers = [
   },
   {
     _id: userTwoId,
+    consumedCalories: 0,
     password: 'password2',
     email: 'user2@email.com'
   }

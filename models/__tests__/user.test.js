@@ -55,6 +55,27 @@ describe('POST /users', () => {
       .expect(400)
       .end(done);
   });
+
+  it('Should update a users consumed calories', done => {
+    const newCalories = 12345;
+    const { _id } = initialUsers[0];
+    const token = initialUsers[0].tokens[0].token;
+
+    supertest(app)
+      .post('/users/me/consumed')
+      .set('x-auth', token)
+      .send({ calories: newCalories, _id })
+      .expect(200)
+      .end((error, res) => {
+        if (error) return done(error);
+        User.findById(_id)
+          .then(user => {
+            expect(user.consumedCalories).toBe(newCalories);
+            done();
+          })
+          .catch(error => done(error));
+      });
+  });
 });
 
 describe('POST /users/login', () => {
