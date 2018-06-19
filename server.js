@@ -24,6 +24,20 @@ app
   })
 
   /* USER */
+  // Update Calorie Goal
+  .post('/users/me/goal', authenticateUser, (req, res) => {
+    const params = _.pick(req.body, ['_id', 'goal']);
+    User.findByIdAndUpdate(
+      params._id,
+      { $set: { calorieGoal: params.goal } },
+      { new: true }
+    )
+      .then(goal => {
+        if (!goal) return res.status(404).send();
+        res.send({ goal });
+      })
+      .catch(error => res.status(400).send(error));
+  })
   // Update Consumed Calories
   .post('/users/me/consumed', authenticateUser, (req, res) => {
     const params = _.pick(req.body, ['_id', 'calories']);

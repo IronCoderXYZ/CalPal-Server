@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 
 const UserSchema = new mongoose.Schema({
-  consumedCalories: Number,
+  calorieGoal: { type: Number, default: 0 },
+  consumedCalories: { type: Number, default: 2000 },
   email: {
     trim: true,
     minlength: 3,
@@ -53,7 +54,12 @@ UserSchema.pre('save', function(next) {
 UserSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
-  return _.pick(userObject, ['_id', 'email', 'consumedCalories']);
+  return _.pick(userObject, [
+    '_id',
+    'email',
+    'consumedCalories',
+    'calorieGoal'
+  ]);
 };
 
 UserSchema.statics.findByCredentials = function(email, password) {

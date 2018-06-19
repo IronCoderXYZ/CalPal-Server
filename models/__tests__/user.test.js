@@ -18,8 +18,8 @@ describe('POST /users', () => {
       .send({ email, password })
       .expect(200)
       .expect(res => {
-        expect(res.body._id).toBeTruthy();
-        expect(res.body.email).toBe(email);
+        expect(res.body.user._id).toBeTruthy();
+        expect(res.body.user.email).toBe(email);
         expect(res.headers['x-auth']).toBeTruthy();
       })
       .end(error => {
@@ -71,6 +71,27 @@ describe('POST /users', () => {
         User.findById(_id)
           .then(user => {
             expect(user.consumedCalories).toBe(newCalories);
+            done();
+          })
+          .catch(error => done(error));
+      });
+  });
+
+  it('Should update a users goal', done => {
+    const newGoal = 54321;
+    const { _id } = initialUsers[0];
+    const token = initialUsers[0].tokens[0].token;
+
+    supertest(app)
+      .post('/users/me/goal')
+      .set('x-auth', token)
+      .send({ goal: newGoal, _id })
+      .expect(200)
+      .end((error, res) => {
+        if (error) return done(error);
+        User.findById(_id)
+          .then(user => {
+            expect(user.calorieGoal).toBe(newGoal);
             done();
           })
           .catch(error => done(error));

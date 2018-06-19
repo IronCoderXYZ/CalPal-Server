@@ -9,6 +9,7 @@ const userTwoId = new ObjectID();
 const initialUsers = [
   {
     _id: userOneId,
+    calorieGoal: 2000,
     consumedCalories: 0,
     password: 'password',
     email: 'user@email.com',
@@ -21,6 +22,7 @@ const initialUsers = [
   },
   {
     _id: userTwoId,
+    calorieGoal: 2000,
     consumedCalories: 0,
     password: 'password2',
     email: 'user2@email.com'
